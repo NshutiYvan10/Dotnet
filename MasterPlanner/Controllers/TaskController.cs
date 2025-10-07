@@ -71,5 +71,23 @@ namespace MasterPlanner.Controllers
                 }
             }
         }
+
+        public DataTable SearchTasks(string searchTerm)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = _dbHelper.GetConnection())
+            {
+                conn.Open();
+                
+                string query = "SELECT * FROM Task WHERE taskName LIKE @searchTerm";
+                using (SqlDataAdapter sda = new SqlDataAdapter(query, conn))
+                {
+                    
+                    sda.SelectCommand.Parameters.AddWithValue("@searchTerm", "%" + searchTerm + "%");
+                    sda.Fill(dt);
+                }
+            }
+            return dt;
+        }
     }
 }
